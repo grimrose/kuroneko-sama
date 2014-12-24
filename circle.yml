@@ -1,5 +1,6 @@
 deployment:
   production:
+    branch: master
     commands:
       - heroku maintenance:on --app kuroneko-sama
       - heroku scale worker=0 --app kuroneko-sama
