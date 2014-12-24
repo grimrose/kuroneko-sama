@@ -1,0 +1,12 @@
+deployment:
+  production:
+    commands:
+      - heroku maintenance:on --app kuroneko-sama
+      - heroku scale worker=0 --app kuroneko-sama
+      - git push git@heroku.com:kuroneko-sama.git $CIRCLE_SHA1:refs/heads/master
+      - heroku scale worker=x --app kuroneko-sama
+      - heroku maintenance:off --app kuroneko-sama
+
+test:
+    post:
+        - echo deploy!
