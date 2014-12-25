@@ -8,6 +8,10 @@
 #
 #   These are from the scripting documentation: https://github.com/github/hubot/blob/master/docs/scripting.md
 
+parser = require 'parse-rss'
+hot_url = 'http://b.hatena.ne.jp/hotentry/it?mode=rss'
+new_url = 'http://b.hatena.ne.jp/entrylist/it?mode=rss'
+
 module.exports = (robot) ->
 
   # robot.hear /badger/i, (msg) ->
@@ -104,3 +108,14 @@ module.exports = (robot) ->
   # robot.respond /sleep it off/i, (msg) ->
   #   robot.brain.set 'totalSodas', 0
   #   robot.respond 'zzzzz'
+  robot.hear /hotentry$/i, (msg) ->
+    parser hot_url, (err, rss)->
+      console.log err if err
+      for item, index in rss
+        msg.send index + ': ' + item.title + ', ', item.link
+
+  robot.hear /newentry$/i, (msg) ->
+    parser new_url, (err, rss)->
+      console.log err if err
+      for item, index in rss
+        msg.send index + ': ' + item.title + ', ', item.link
