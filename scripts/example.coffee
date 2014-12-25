@@ -9,8 +9,10 @@
 #   These are from the scripting documentation: https://github.com/github/hubot/blob/master/docs/scripting.md
 
 parser = require 'parse-rss'
-hot_url = 'http://b.hatena.ne.jp/hotentry/it?mode=rss'
-new_url = 'http://b.hatena.ne.jp/entrylist/it?mode=rss'
+async = require 'async'
+
+hotEntryUrl = 'http://b.hatena.ne.jp/hotentry/it.rss'
+newEntryUrl = 'http://b.hatena.ne.jp/entrylist/it?mode=rss'
 
 module.exports = (robot) ->
 
@@ -108,14 +110,25 @@ module.exports = (robot) ->
   # robot.respond /sleep it off/i, (msg) ->
   #   robot.brain.set 'totalSodas', 0
   #   robot.respond 'zzzzz'
+
+  sendEntries = (msg, url) ->
+    parser url, (err, rss)->
+      if err
+        robot.emit 'error', err, msg
+        return
+      index = 1
+      async.eachSeries rss, (item, next) ->
+        setTimeout () ->
+          msg.send index + ': ' + item.title + ', ', item.link
+          index++
+          next()
+        , 1500
+      , (err) ->
+        if err
+          robot.emit 'error', err, msg
+
   robot.hear /hotentry$/i, (msg) ->
-    parser hot_url, (err, rss)->
-      console.log err if err
-      for item, index in rss
-        msg.send index + ': ' + item.title + ', ', item.link
+    sendEntries msg, hotEntryUrl
 
   robot.hear /newentry$/i, (msg) ->
-    parser new_url, (err, rss)->
-      console.log err if err
-      for item, index in rss
-        msg.send index + ': ' + item.title + ', ', item.link
+    sendEntries msg, newEntryUrl
