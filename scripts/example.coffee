@@ -122,7 +122,7 @@ module.exports = (robot) ->
           msg.send index + ': ' + item.title + ', ', item.link
           index++
           next()
-        , 1500
+        , 3000
       , (err) ->
         if err
           robot.emit 'error', err, msg
