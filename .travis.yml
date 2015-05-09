@@ -11,3 +11,7 @@ deploy:
   password: $OPENSHIFT_PASSWORD
   app: $OPENSHIFT_APP_NAME
   domain: $OPENSHIFT_APP_NAMESPACE
+
+notifications:
+  slack:
+    secure: r7t/NUh24oKvWIFbf26/T3tpRI3shPNnoy+HhHITnzTY3qP8DwUwifEVa73LgSNal2nNJE9ADvG3A12esRsWC0mlXzfMg4Rq1CYaVl5AHfBerXktFAD2CUoZ6xJ1V/bWWDk//l3QHMzjmV8co2SDBQbtMriZCb1pPTXORbbJa34=
